@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-kernel:
+    name: Build Kernel
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout kernel source
+        uses: actions/checkout@v4
+        with:
+          path: kernel/source
+          ref: lineage-22.1
+
+      - name: Build
+        uses: dabao1955/kernel_build_action@main
+        with:
+          kernel-url: ./kernel/source/
+          config: mgk_64_k515_defconfig
+          arch: arm64
+          android-version: 13
+          aosp-clang: true
+          ksu: false
+          lxc: false
+          anykernel3: true
+          release: true
+          access-token: ${{ secrets.GITHUB_TOKEN }}
